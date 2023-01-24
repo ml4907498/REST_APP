@@ -15,9 +15,19 @@ export class AppService {
     'image_small',
     'image',
   ];
-  private readonly artists: Array<any> = [];
+  private artistList: Array<any> = [];
 
-  async getArtist(artistName: string): Promise<any> {
+  async getArtist(artistName: string): Promise<object[]> {
+    let artistList: object[] = await this.getArtstsFromLastFM(artistName);
+    if (!artistList.length) {
+      const randomArtistName = this.getRandomArtistName();
+      artistList = await this.getArtstsFromLastFM(randomArtistName);
+    }
+    this.saveArtists(artistList);
+    return this.artistList;
+  }
+
+  async getArtstsFromLastFM(artistName: string): Promise<object[]> {
     const response = await this.httpService
       .get(
         `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${artistName}&api_key=1789ec4a628915bfe236ff29b548f010&format=json`,
@@ -28,13 +38,21 @@ export class AppService {
       });
 
     const artistList = response.data.results.artistmatches.artist;
-    this.saveArtists(artistList);
-    return this.artists;
+    return artistList;
+  }
+
+  getRandomArtistName(): string {
+    const data = fs.readFileSync('data/artists.json');
+    const artists = JSON.parse(data.toString()).artists;
+    const artist = artists[Math.floor(Math.random() * artists.length)];
+    console.log(`get a random artist: ${artist}`);
+    return artist;
   }
 
   saveArtists(artistList: Array<any>): void {
+    const artists = [];
     artistList.forEach((artist) => {
-      this.artists.push([
+      artists.push([
         artist.name,
         artist.mbid,
         artist.url,
@@ -42,26 +60,21 @@ export class AppService {
         artist.image[1]['#text'],
       ]);
     });
+    this.artistList = artists;
   }
 
-  save2CSV(fileName: string) {
+  save2CSV(fileName: string): void {
     const val = [this.HEADER]
-      .concat(this.artists)
+      .concat(this.artistList)
       .map((arr) => arr.join(','))
       .join('\r\n');
-    let msg;
 
     fs.writeFile(`./data/${fileName}.csv`, val, (err) => {
       if (err) {
         console.error(err);
-        msg = err.message;
       } else {
-        msg = 'The file has been saved!';
-        console.log(msg);
-        return msg;
+        console.log('The file has been saved!');
       }
     });
-
-    return msg;
   }
 }

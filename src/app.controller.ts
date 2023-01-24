@@ -10,8 +10,8 @@ export class AppController {
     return this.appService.getArtist(artist.name);
   }
 
-  @Post('/CSV/:name')
-  save2CSV(@Param() CSV): string {
+  @Post('/csv/:name')
+  save2CSV(@Param() CSV): void {
     return this.appService.save2CSV(CSV.name);
   }
 }
