@@ -35,7 +35,7 @@ $ pnpm run test:cov
 
 
 
-## Endpoints
+## APIs
 ```bash
 # searh for a artist by name and return a list of all matching artist.
 # when there is no results from the endpoint, it retrieves a random artist name from the data/artists.json.
