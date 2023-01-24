@@ -24,7 +24,7 @@ export class AppService {
       artistList = await this.getArtstsFromLastFM(randomArtistName);
     }
     this.saveArtists(artistList);
-    return this.artistList;
+    return artistList;
   }
 
   async getArtstsFromLastFM(artistName: string): Promise<object[]> {
@@ -49,7 +49,7 @@ export class AppService {
     return artist;
   }
 
-  saveArtists(artistList: Array<any>): void {
+  saveArtists(artistList: Array<any>): string[] {
     const artists = [];
     artistList.forEach((artist) => {
       artists.push([
@@ -61,6 +61,7 @@ export class AppService {
       ]);
     });
     this.artistList = artists;
+    return artists;
   }
 
   save2CSV(fileName: string): void {
