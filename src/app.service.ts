@@ -8,6 +8,7 @@ export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
+  // Header for csv files
   private readonly HEADER: Array<string> = [
     'name',
     'mbid',
@@ -17,6 +18,7 @@ export class AppService {
   ];
   private artistList: Array<any> = [];
 
+  // get the rearching result of the artist, if no results returned, retrive random artist name.
   async getArtist(artistName: string): Promise<object[]> {
     let artistList: object[] = await this.getArtstsFromLastFM(artistName);
     if (!artistList.length) {
@@ -27,6 +29,7 @@ export class AppService {
     return artistList;
   }
 
+  // search for an artist by name based on the endpoint.
   async getArtstsFromLastFM(artistName: string): Promise<object[]> {
     const response = await this.httpService
       .get(
@@ -41,6 +44,7 @@ export class AppService {
     return artistList;
   }
 
+  // select a artist name randomly from the json file
   getRandomArtistName(): string {
     const data = fs.readFileSync('data/artists.json');
     const artists = JSON.parse(data.toString()).artists;
@@ -49,6 +53,7 @@ export class AppService {
     return artist;
   }
 
+  // save the searching result to the cash
   saveArtists(artistList: Array<any>): string[] {
     const artists = [];
     artistList.forEach((artist) => {
@@ -64,6 +69,7 @@ export class AppService {
     return artists;
   }
 
+  // save the result to a csv file named by the user.
   save2CSV(fileName: string): void {
     const val = [this.HEADER]
       .concat(this.artistList)

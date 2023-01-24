@@ -10,11 +10,13 @@ export class AppController {
     return this.appService.getHello();
   }
 
+  // search the artist by name
   @Get('/artist/:name')
   getArtist(@Param() artist): any {
     return this.appService.getArtist(artist.name);
   }
 
+  // save the searching result to a csv file
   @Post('/csv/:name')
   save2CSV(@Param() CSV): void {
     return this.appService.save2CSV(CSV.name);
