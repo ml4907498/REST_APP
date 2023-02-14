@@ -1,5 +1,5 @@
 ## Description
-A REST API application by Nest.js that handles the artist API from the endpoint [artist.search](https://github.com/nestjs/nest).
+A REST API application by Nest.js that handles the artist API from the endpoint [artist.search](https://www.last.fm/api/show/artist.search).
 
 ## Installation
 
